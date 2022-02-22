@@ -9,7 +9,7 @@ a virtual environment in order to make prediction of ICMEs associated with a giv
 To do so you need to follow these steps:</p>
 👏
 <ul>
-    <li>`you should have python 3.6 already installed for example => C:\Users\...\Programs\Python\Python36`</li>
+    <li>you should have python 3.6 already installed for example => C:\Users\...\Programs\Python\Python36</li>
     <li>pip install virtualenv</li>
     <li>python -m virtualenv -p="C:\Users\...\Programs\Python\Python36\python.exe" venvwithpyhon36
     </li>
