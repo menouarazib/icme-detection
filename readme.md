@@ -1,5 +1,5 @@
 <h1>Make predictions of ICMEs by using the Nguyen model</h1>
-https://github.com/gautiernguyen/Automatic-detection-of-ICMEs-at-1-AU-a-deep-learning-approach</h1>
+https://github.com/gautiernguyen/Automatic-detection-of-ICMEs-at-1-AU-a-deep-learning-approach
 <br>
 <br>
 <p>This repository contains a python script (main.py) which should be executed in 
