@@ -1,4 +1,6 @@
-<h1>Make predictions of ICMEs by using the Nguyen model <br>https://github.com/gautiernguyen/Automatic-detection-of-ICMEs-at-1-AU-a-deep-learning-approach</h1>
+<h1>Make predictions of ICMEs by using the Nguyen model</h1>
+<br>
+https://github.com/gautiernguyen/Automatic-detection-of-ICMEs-at-1-AU-a-deep-learning-approach</h1>
 <p>This folder contains a python script (main.py) which should be executed in 
 a virtual environment in order to make prediction of ICMEs associated with a given start and stop times.
 <br>
