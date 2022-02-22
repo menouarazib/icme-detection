@@ -48,36 +48,10 @@ def main():
 
     :return:
     """
-    logger.info("Checking arguments... ")
-    nb_arguments = len(sys.argv)
-    destination_folder_path = ""
-    if not _debug and nb_arguments < 3:
-        message = "X X : Expected at least 3 arguments. You give only: ", nb_arguments, *sys.argv
-        logger.error(message)
-        sys.exit(errno.EINVAL)
-    elif not _debug and nb_arguments ==4:
-        message = "Destination folder is given: ", sys.argv[3]
-        logger.info(message)
-        destination_folder_path = sys.argv[3]
-    elif not _debug and nb_arguments ==3:
-        message = "Destination folder is missing, the output files will be saved in the current folder"
-        logger.warn(message)
-
-    start = "2012-7-2T20:30:00"
-    stop = "2012-7-20T23:59:00"
-
-    if not _debug:
-        message = "Checking the formats of start time and stop time: ", start, stop
-        logger.info(message)
-        try:
-            start = validate_time_format(sys.argv[1])
-            stop = validate_time_format(sys.argv[2])
-        except ValueError as error:
-            logger.error('Caught this error: ' + repr(error))
-            sys.exit(errno.EINVAL)
-    else:
-        start = datetime.strptime(start, _date_format)
-        stop = datetime.strptime(stop, _date_format)
+    destination_folder_path = sys.argv[1]
+    param_id = sys.argv[2]
+    start = datetime.strptime(sys.argv[3], _date_format)
+    stop = datetime.strptime(sys.argv[4], _date_format)
 
     logger.info("Arguments are valid")
 
