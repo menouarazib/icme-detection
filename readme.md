@@ -4,6 +4,7 @@ a virtual environment in order to make prediction of ICMEs associated with a giv
 <br>
 <br>
 To do so you need to follow these steps:</p>
+👏
 <ul>
     <li>you should have python 3.6 already installed for example => C:\Users\...\Programs\Python\Python36</li>
     <li>pip install virtualenv</li>
@@ -11,6 +12,8 @@ To do so you need to follow these steps:</p>
     </li>
     <li>activate the virtual environment = venv\Scripts\activate</li>
     <li>install the requirements = pip --no-cache-dir install -r requirements.txt</li>
-    <li>run the script with the following arguments a start time <strong>start</strong>, a stop time <strong>stop</strong> and a destination folder <strong>path</strong> = python -m main start stop path</li>
+    <li>run the script with the following arguments a start time <strong>start</strong>, a stop time <strong>stop</strong> and a destination folder <strong>path</strong>: <br>
+    <span style="color:orange; font-size: 17px;"> python -m main start stop path</span>
+    </li>
 </ul>
- 
+ 👏
