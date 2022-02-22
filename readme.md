@@ -11,6 +11,6 @@ To do so you need to follow these steps:</p>
     </li>
     <li>activate the virtual environment = venv\Scripts\activate</li>
     <li>install the requirements = pip --no-cache-dir install -r requirements.txt</li>
-    <li>run the script with a start time(s), a stop time(e) and destination folder path (path) = python -m main s e path</li>
+    <li>run the script with the following arguments a start time <strong>start</strong>, a stop time <strong>stop</strong> and a destination folder <strong>path</strong> = python -m main start stop path</li>
 </ul>
  
