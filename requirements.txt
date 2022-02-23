@@ -9,5 +9,5 @@ lmfit==1.0.1
 matplotlib~=3.2.0
 joblib==1.1.0
 h5py==2.10.0
-
 click~=8.0.4
+requests~=2.27.1
