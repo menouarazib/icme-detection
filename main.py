@@ -39,18 +39,18 @@ Add a time to the start/stop times, by default is zero
 
 def main():
     """
-    Gets a predicted ICME events for a given start and stop times,
+    Returns the predicted ICME events for a given start and stop times,
     then saves them into csv file named 'icme_events.csv' and into
     image named 'icme_events.png'
 
 
-    if you are in the debug mode (DEBUG == True) then you need to specify the start/stop times manually (see lines
-    93, 94), if you are in the production mode (DEBUG == False) then you need to pass start/stop times as arguments (see
-    readme.md)
+    if you are in the debug mode (DEBUG == True) then you need to specify the start/stop times manually (see
+    START_TIME_DEBUG and STOP_TIME_DEBUG), if you are in the production mode (DEBUG == False) then you need to pass
+    start/stop times as arguments (see readme.md)
 
     if you need to plot the results you need to assign True to PLOT
 
-    :return:
+    :return: the predicted ICME events
     """
     logger.info("Checking arguments... ")
     nb_arguments = len(sys.argv)
@@ -126,5 +126,3 @@ if __name__ == '__main__':
     # run predictions
     main()
     logging.shutdown()
-
-# TODO add dataset.parquet to .gitignore, add kagle url for the parquet, push, test venv with puthon > 36 add comments to readme.md
