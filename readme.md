@@ -1,6 +1,5 @@
 <h1>Make predictions of ICMEs by using the Nguyen model</h1>
 https://github.com/gautiernguyen/Automatic-detection-of-ICMEs-at-1-AU-a-deep-learning-approach
-<br>
 
 ##Description
 <p>This repository contains a python script (main.py) which should be executed in 
@@ -23,7 +22,7 @@ To do so you need to follow these steps:</p>
 </ul>
 
 ## Dataset
-<p>The script will automatically download the dataset if it does not exist in the data folder but if you want to download it manually, it can be found here: https://www.kaggle.com/gautiernguyen/wind-data:
+<p>The script will automatically download the dataset if it does not exist in the data/datasets folder but if you want to download it manually, it can be found here: https://www.kaggle.com/gautiernguyen/wind-data:
 </p>
 
 
