@@ -30,11 +30,6 @@ PATH_TO_MODELS = "./data/models/"
 The path to models
 """
 
-PATH_TO_SCALERS = "./data/scalers/"
-"""
-Path to scalers
-"""
-
 STEP_STRIDE_WINDOW = 6
 """
 The step between two windows: see sliding_windows method
