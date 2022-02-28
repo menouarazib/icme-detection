@@ -52,12 +52,6 @@ def main():
 
     :return: the predicted ICME events
     """
-<<<<<<< HEAD
-    destination_folder_path = sys.argv[1]
-    param_id = sys.argv[2]
-    start = datetime.strptime(sys.argv[3], _date_format)
-    stop = datetime.strptime(sys.argv[4], _date_format)
-=======
     logger.info("Checking arguments... ")
     nb_arguments = len(sys.argv)
     destination_folder_path = ""
@@ -85,7 +79,6 @@ def main():
     else:
         start = validate_time_format(START_TIME_DEBUG)
         stop = validate_time_format(STOP_TIME_DEBUG)
->>>>>>> 30b8223a4abc8a67e5515c60ab9314b4d1854dc4
 
     logger.info("Arguments are valid")
 
