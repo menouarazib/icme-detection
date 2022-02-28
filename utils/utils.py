@@ -1,6 +1,7 @@
 import warnings
 from datetime import datetime
-
+import sys
+import requests
 import click
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -9,16 +10,40 @@ from matplotlib import patches
 from scipy.ndimage import median_filter
 from sklearn.exceptions import DataConversionWarning
 from sklearn.externals import joblib
-
+from os import path
 import numpy as np
 import logging
 from keras.models import load_model
 
-_path_to_models = "./data/models/"
-_path_to_scalers = "./data/scalers/"
+DIRECTORY_DATA = './data/datasets/'
+"""
+The directory of stored data
+"""
 
-_step_stride = 6
-_max_width = 50
+PUBLIC_LINK_DATA_SET = "https://drive.google.com/uc?export=download&id=1rcnGVJrWYxYsrR7PdeaoBCnnDw5jU7gX&confirm=t"
+"""
+The link to download the data set from sharing drive
+"""
+
+PATH_TO_MODELS = "./data/models/"
+"""
+The path to models
+"""
+
+STEP_STRIDE_WINDOW = 6
+"""
+The step between two windows: see sliding_windows method
+"""
+
+"""
+The maximum window width, by default is 100 hours
+"""
+MAX_WINDOW_WIDTH = 100
+
+DATE_FORMAT = '%Y-%m-%dT%H:%M:%S'
+"""
+The expected date format: ISO format
+"""
 
 
 def get_module_logger(mod_name):
@@ -69,7 +94,7 @@ def add_extra_features(data):
 
 def delimit_data(data):
     """
-    Delimit data by a  starting and  ending time
+    Delimit data by a starting and ending time
 
     :param data: dataset (features)
     :return: the delimited dataset
@@ -98,7 +123,7 @@ def resampling_data(data):
 
 def sliding_windows(data, window, step=1):
     """
-    create a new numpy array with dimension of (((n-m)//step) +1, window, m), where each rwo is a (window,
+    Create a new numpy array with dimension of (((n-m)//step) +1, window, m), where each rwo is a (window,
     m) array. Two successive windows have same rows except the first (step) ones. This is method is used to windowing
     the data. This method is used to split the data set into sliding windows of various sizes (from 1 to 100 Hr)
 
@@ -124,9 +149,9 @@ def predict(data, width):
     :param width: the id of the CNN to load and it represents also the id of the sliding window
     :return: the similarity parameter for each window size, the size is equal to id window (width) * _step_stride
     """
-    window = int(_step_stride * width)
-    scale = joblib.load(_path_to_models + 'scaler' + str(width) + '.pkl')
-    model = load_model(_path_to_models + 'model' + str(width) + '.h5')
+    window = int(STEP_STRIDE_WINDOW * width)
+    scale = joblib.load(PATH_TO_MODELS + 'scaler' + str(width) + '.pkl')
+    model = load_model(PATH_TO_MODELS + 'model' + str(width) + '.h5')
     x_scaled = scale.transform(data)
     x_to_predict = sliding_windows(x_scaled, window=window)
     y_predicted = model.predict(x_to_predict, verbose=0)
@@ -145,8 +170,8 @@ def predict_all(data):
 
     warnings.filterwarnings(action='ignore', category=DataConversionWarning)
 
-    nb_items = (len(data) // _step_stride) + 1
-    windows = np.arange(1, min(nb_items, _max_width + 1))
+    nb_items = (len(data) // STEP_STRIDE_WINDOW) + 1
+    windows = np.arange(1, min(nb_items, MAX_WINDOW_WIDTH + 1))
     predictions = pd.DataFrame(index=data.index)
     with click.progressbar(windows, fill_char='█', label='Predictions from CNNs', info_sep='\n') as bar:
         for width in bar:
@@ -203,3 +228,74 @@ def plot_events_icme(integral, list_icmes, path_save, plot):
     plt.savefig(path_save)
     if plot:
         plt.show()
+
+
+def download(url, destination):
+    """
+    Download the file from a given url and save it in the destination folder
+    :param url: url of the file to be downloaded
+    :param destination: the destination where to save the downloaded file
+    :return:
+    """
+
+    with open(destination, 'wb') as f:
+        response = requests.get(url, stream=True)
+        total = response.headers.get('content-length')
+
+        if total is None:
+            f.write(response.content)
+        else:
+            downloaded = 0
+            total = int(total)
+            width_bar = 50
+            chunk_size = max(total // 1000, 1024 * 1024)
+            for data in response.iter_content(chunk_size=chunk_size):
+                downloaded += len(data)
+                f.write(data)
+                done = width_bar * downloaded // total
+                sys.stdout.write('\rDownloading : [{}{}] {}%'.format('█' * done, '.' * (width_bar - done), done * 2))
+                sys.stdout.flush()
+            f.close()
+    sys.stdout.write('\n')
+
+
+def get_or_download_data_set():
+    """
+    Download the raw data (dataset) from a sharing drive
+    :return:
+    """
+    path_to_data = path.join(DIRECTORY_DATA, 'datasetWithSpectro.parquet')
+    if path.exists(path_to_data):
+        logger.info("The dataset is already exist")
+    else:
+        logger.info("The dataset does not exist")
+        logger.info("Downloading dataset from sharing drive...")
+        download(PUBLIC_LINK_DATA_SET, path_to_data)
+    raw_data = pd.read_parquet(path_to_data, engine='pyarrow')
+    return raw_data
+
+
+def validate_time_format(date_string):
+    """
+    Converts string date to datetime object according to this format: DATE_FORMAT
+
+    :param date_string: given string date
+    :return: datetime object
+    """
+    try:
+        return datetime.strptime(date_string, DATE_FORMAT)
+    except ValueError:
+        raise ValueError("This is the incorrect date string format. It should be: ", DATE_FORMAT, " for this input: ",
+                         date_string)
+
+
+def convert_events_to_np_array(list_events):
+    """
+    Converts ICME events to numpy array
+    :param list_events: list of events
+    :return: numpy array (catalog)
+    """
+    table = []
+    for event in list_events:
+        table.append([datetime.strftime(event.begin, DATE_FORMAT), datetime.strftime(event.end, DATE_FORMAT)])
+    return np.array(table)
