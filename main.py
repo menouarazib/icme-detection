@@ -4,7 +4,7 @@ from datetime import timedelta
 import numpy as np
 
 from utils.utils import delimit_data, resampling_data, \
-    add_extra_features, plot_similarity_prediction, predict_all, get_module_logger, plot_events_icme,  \
+    add_extra_features, plot_similarity_prediction, predict_all, get_module_logger, plot_events_icme, \
     validate_time_format, get_or_download_data_set, convert_events_to_np_array
 from utils.gautierfunctions.process import turn_peaks_to_clouds
 
@@ -52,30 +52,35 @@ def main():
 
     :return: the predicted ICME events
     """
-    logger.info("Checking arguments... ")
-    nb_arguments = len(sys.argv)
+    
+    arguments = sys.argv
+    nb_arguments = len(arguments)
     destination_folder_path = ""
-    if not DEBUG and nb_arguments < 3:
-        message = "X X : Expected at least 3 arguments. You give only: ", nb_arguments, *sys.argv
-        logger.error(message)
-        sys.exit(errno.EINVAL)
-    elif not DEBUG and nb_arguments == 4:
-        message = "Destination folder is given: ", sys.argv[3]
-        logger.info(message)
-        destination_folder_path = sys.argv[3]
-    elif not DEBUG and nb_arguments == 3:
-        message = "Destination folder is missing, the output files will be saved in the current folder"
-        logger.warn(message)
 
+    logger.info("Checking arguments... ")
     if not DEBUG:
-        message = "Checking the formats of start time and stop time..."
-        logger.info(message)
-        try:
-            start = validate_time_format(sys.argv[1])
-            stop = validate_time_format(sys.argv[2])
-        except ValueError as error:
-            logger.error('Caught this error: ' + repr(error))
+        if nb_arguments < 4:
+            message = "Expected at least 4 arguments. You give only: ", nb_arguments, *arguments
+            logger.error(message)
             sys.exit(errno.EINVAL)
+        else:
+            message = "Given arguments: ", *arguments
+            logger.info(message)
+            destination_folder_path = arguments[1]
+            if nb_arguments == 4:
+                start = arguments[2]
+                stop = arguments[3]
+            else:
+                start = arguments[3]
+                stop = arguments[4]
+            message = "Checking the formats of start time and stop time..."
+            logger.info(message)
+            try:
+                start = validate_time_format(start)
+                stop = validate_time_format(stop)
+            except ValueError as error:
+                logger.error('Caught this error: ' + repr(error))
+                sys.exit(errno.EINVAL)
     else:
         start = validate_time_format(START_TIME_DEBUG)
         stop = validate_time_format(STOP_TIME_DEBUG)
@@ -83,7 +88,7 @@ def main():
     logger.info("Arguments are valid")
 
     if start >= stop:
-        message = "X X : The start time must be less than the stop time: ", start, stop
+        message = "The start time must be less than the stop time: ", start, stop
         logger.error(message)
         sys.exit(errno.EINVAL)
 
@@ -116,7 +121,7 @@ def main():
     events_catalog = convert_events_to_np_array(list_icmes)
     path_save = os.path.join(destination_folder_path, "events_tt_output.csv")
     np.savetxt(path_save, events_catalog, delimiter=" ", fmt='%s')
-    message = "List of events %s ", *events_catalog
+    message = "List of events: ", *events_catalog
     logger.info(message)
     logger.info("End")
 
